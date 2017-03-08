@@ -5,9 +5,13 @@
  * Date: 2/28/17
  * Time: 12:21 PM
  */
-require 'vendor/autoload.php';
-require 'models/ActiveORM.php';
-require 'models/User.php';
+require_once 'vendor/autoload.php';
+require_once 'src/Definition/Table.php';
+require_once 'src/Definition/Column.php';
+require_once 'src/Exceptions/ColumnNotDefinedException.php';
+require_once 'src/Query.php';
+require_once 'src/ActiveRecord.php';
+require_once 'test/User.php';
 
 use Medoo\Medoo;
 
