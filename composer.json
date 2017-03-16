@@ -1,5 +1,21 @@
 {
-  "require": {
-    "catfan/Medoo": "^1.2"
-  }
+    "name": "francis/active-orm-php",
+    "description": "A light Active Record pattern implementation inspired by Ruby on Rails",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Francis",
+            "email": "frazboyz101@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4.0",
+        "catfan/Medoo": "^1.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "ActiveORM": "src/"
+        }
+    }
 }

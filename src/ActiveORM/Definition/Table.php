@@ -6,7 +6,7 @@
  * Date: 3/8/17
  * Time: 12:44 PM
  */
-namespace Definition;
+namespace ActiveORM\Definition;
 
 /**
  * Class Table
@@ -15,8 +15,19 @@ namespace Definition;
  */
 class Table
 {
+    /**
+     * @var string The name of the table
+     */
     private $name;
+
+    /**
+     * @var PrimaryKeyColumn The primary key column of this table
+     */
     private $identifier;
+
+    /**
+     * @var array An array of the columns that this table contains
+     */
     private $columns;
 
     /**
@@ -30,7 +41,7 @@ class Table
 
         foreach($columns as $column)
         {
-            if ($column->isPrimaryKey())
+            if ($column instanceof PrimaryKeyColumn)
             {
                 $this->identifier = $column;
             }
@@ -47,6 +58,14 @@ class Table
     }
 
     /**
+     * @return PrimaryKeyColumn The identifier of the table.
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
      * @return array An array of columns.
      */
     public function getColumns()
@@ -57,12 +76,12 @@ class Table
     /**
      * @param string $name The name of the column.
      * @return Column.
-     * @throws \Exceptions\ColumnNotDefinedException
+     * @throws \ActiveORM\Exceptions\ColumnNotDefinedException
      */
     public function getColumn($name)
     {
         if (!$this->hasColumn($name)) {
-            throw new \Exceptions\ColumnNotDefinedException($name);
+            throw new \ActiveORM\Exceptions\ColumnNotDefinedException($name);
         }
         return $this->columns[$name];
     }

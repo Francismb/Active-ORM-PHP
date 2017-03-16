@@ -6,7 +6,7 @@
  * Time: 12:58 PM
  */
 
-namespace Exceptions;
+namespace ActiveORM\Exceptions;
 
 class ColumnNotDefinedException extends \Exception
 {
