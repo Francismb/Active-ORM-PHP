@@ -1,13 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: francis
- * Date: 3/8/17
- * Time: 12:58 PM
- */
 
 namespace ActiveORM\Exceptions;
 
+/**
+ * Class ColumnNotDefinedException.
+ * @package ActiveORM\Exceptions
+ */
 class ColumnNotDefinedException extends \Exception
 {
     public function __construct($column)

@@ -1,13 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: francis
- * Date: 3/16/17
- * Time: 12:30 PM
- */
 
 namespace ActiveORM\Definition;
 
+/**
+ * Interface Column.
+ * @package ActiveORM\Definition
+ */
 interface Column
 {
     /**

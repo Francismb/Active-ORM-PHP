@@ -1,15 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: francis
- * Date: 3/8/17
- * Time: 12:32 PM
- */
+
 namespace ActiveORM;
 
+/**
+ * Class Query.
+ * @package ActiveORM
+ */
 class Query
 {
-
     /**
      * @var \ActiveORM\Definition\Table
      */

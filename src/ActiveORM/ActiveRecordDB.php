@@ -1,12 +1,11 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: francis
- * Date: 3/16/17s
- * Time: 10:11 AM
- */
 namespace ActiveORM;
+
+/**
+ * Class ActiveRecordDB.
+ * @package ActiveORM
+ */
 class ActiveRecordDB
 {
 

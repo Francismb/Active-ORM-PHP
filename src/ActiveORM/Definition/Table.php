@@ -1,15 +1,9 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: francis
- * Date: 3/8/17
- * Time: 12:44 PM
- */
 namespace ActiveORM\Definition;
 
 /**
- * Class Table
+ * Class Table.
  * Represents a table in a database.
  * @package Definition
  */

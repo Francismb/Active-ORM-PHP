@@ -1,14 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: francis
- * Date: 3/16/17
- * Time: 12:30 PM
- */
 
 namespace ActiveORM\Definition;
 
-
+/**
+ * Class GenericColumn.
+ * @package ActiveORM\Definition
+ */
 class GenericColumn implements Column
 {
     /**

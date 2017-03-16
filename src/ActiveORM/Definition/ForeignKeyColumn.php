@@ -1,13 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: francis
- * Date: 3/16/17
- * Time: 12:36 PM
- */
 
 namespace ActiveORM\Definition;
 
+/**
+ * Class ForeignKeyColumn.
+ * @package ActiveORM\Definition
+ */
 class ForeignKeyColumn implements Column
 {
     /**

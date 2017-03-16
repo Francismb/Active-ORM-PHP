@@ -1,12 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: francis
- * Date: 2/28/17
- * Time: 1:48 PM
- */
+
 namespace ActiveORM;
 
+/**
+ * Class ActiveRecord.
+ * @package ActiveORM
+ */
 class ActiveRecord extends Query
 {
     /**
@@ -17,7 +16,7 @@ class ActiveRecord extends Query
     /**
      * Constructs a new ActiveRecord.
      * Calls the static define function.
-     * @param array $columns The values of this record.
+     * @param array $columns The key and values of this record.
      */
     public function __construct($columns = [])
     {
@@ -54,6 +53,7 @@ class ActiveRecord extends Query
     /**
      * Overriding the get magic method to give proper values
      * @param string $name the name of the field
+     * @return mixed The value of the column
      * @throws \ActiveORM\Exceptions\ColumnNotDefinedException
      */
     public function __get($name)
