@@ -7,7 +7,7 @@
  */
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$db = ActiveORM\ActiveRecordDB::initialize([
+ActiveORM\ActiveRecordDB::initialize([
     'database_type' => 'sqlite',
     'database_file' => __DIR__ . '/../test/database.db'
 ]);
@@ -54,6 +54,12 @@ if ($user2->id != null) {
 } else {
     echo 'Could not create user 2';
 }
+
+// Test exists function
+echo 'Does user with the email `test@gmail.com12222` exist(' . (User::exists(['email' => 'test@gmail.com12222']) ? 'true' : 'false') . ')' . "\n\n";
+
+// Test count function
+echo 'There are ' . User::count() . ' users in the database' . "\n\n";
 
 // Find all users with the same password
 $usersWithSamePassword = User::findAll(["password" => "supersecretpasswor1d"]);

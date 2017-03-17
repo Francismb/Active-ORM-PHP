@@ -31,12 +31,12 @@ class Query
 
         if ($this->table->getIdentifier()->getValue() != null)
         {
-            $GLOBALS['database']->update($this->table->getName(), $row, [$this->table->getIdentifier()->getName() => $this->table->getIdentifier()->getValue()]);
+            ActiveRecordDB::getDatabase()->update($this->table->getName(), $row, self::createIdentifier($this->table->getIdentifier()));
         }
         else
         {
-            $GLOBALS['database']->insert($this->table->getName(), $row);
-            $this->table->getIdentifier()->setValue($GLOBALS['database']->id());
+            ActiveRecordDB::getDatabase()->insert($this->table->getName(), $row);
+            $this->table->getIdentifier()->setValue(ActiveRecordDB::getDatabase()->id());
         }
     }
 
@@ -46,7 +46,7 @@ class Query
     public function delete() {
         if ($this->table->getIdentifier()->getValue() != null)
         {
-            $GLOBALS['database']->delete($this->table->getName(), [$this->table->getIdentifier()->getName() => $this->table->getIdentifier()->getValue()]);
+            ActiveRecordDB::getDatabase()->delete($this->table->getName(), self::createIdentifier($this->table->getIdentifier()));
         }
     }
 
@@ -70,7 +70,7 @@ class Query
     {
         $table = static::define();
 
-        $row = $GLOBALS['database']->get($table->getName(), '*', $criteria);
+        $row = ActiveRecordDB::getDatabase()->get($table->getName(), '*', $criteria);
 
         if ($row)
         {
@@ -96,7 +96,7 @@ class Query
     {
         $table = static::define();
 
-        $rows = $GLOBALS['database']->select($table->getName(), '*', $criteria);
+        $rows = ActiveRecordDB::getDatabase()->select($table->getName(), '*', $criteria);
 
         if ($rows)
         {
@@ -117,6 +117,28 @@ class Query
     }
 
     /**
+     * Checks to see if the record exists.
+     * @param array $criteria The 'where' of the query.
+     * @return bool True if it exists else false.
+     */
+    public static function exists($criteria)
+    {
+        $table = static::define();
+        return ActiveRecordDB::getDatabase()->has($table->getName(), $criteria);
+    }
+
+    /**
+     * Gets the amount of records that match the criteria.
+     * @param array $criteria The 'where' of the query.
+     * @return int The amount of records.
+     */
+    public static function count($criteria = [])
+    {
+        $table = static::define();
+        return ActiveRecordDB::getDatabase()->count($table->getName(), $criteria);
+    }
+
+    /**
      * Compiles a Table object into an associative array
      * @param \ActiveORM\Definition\Table $table
      * @return array the compiled table
@@ -131,5 +153,14 @@ class Query
         }
 
         return $data;
+    }
+
+    /**
+     * @param \ActiveORM\Definition\PrimaryKeyColumn $identifier.
+     * @return array.
+     */
+    private function createIdentifier($identifier)
+    {
+        return [$identifier->getName() => $identifier->getValue()];
     }
 }
