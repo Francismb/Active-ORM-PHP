@@ -51,6 +51,14 @@ class GenericColumn implements Column
 
     public function setValue($value)
     {
-        $this->value = $value;
+        $type = gettype($value);
+        if ($type == $this->getType())
+        {
+            $this->value = $value;
+        }
+        else
+        {
+            throw new \ActiveORM\Exceptions\IncorrectDataTypeException($this->getName(), $type);
+        }
     }
 }

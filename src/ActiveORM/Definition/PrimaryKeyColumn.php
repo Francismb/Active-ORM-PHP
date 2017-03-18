@@ -34,7 +34,7 @@ class PrimaryKeyColumn implements Column
 
     public function getType()
     {
-        return 'int';
+        return 'integer';
     }
 
     public function getValue()
@@ -44,6 +44,14 @@ class PrimaryKeyColumn implements Column
 
     public function setValue($value)
     {
-        $this->value = $value;
+        $type = gettype($value);
+        if ($this->getType() == $type)
+        {
+            $this->value = $value;
+        }
+        else
+        {
+            throw new \ActiveORM\Exceptions\IncorrectDataTypeException($this->getName(), $type);
+        }
     }
 }

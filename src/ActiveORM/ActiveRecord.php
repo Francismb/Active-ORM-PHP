@@ -33,10 +33,10 @@ class ActiveRecord extends Query
     }
 
     /**
-     * Overriding the set magic method to save mappings
-     * @param string $name the name of the field
-     * @param mixed $value the value of the field
-     * @throws \ActiveORM\Exceptions\ColumnNotDefinedException
+     * Overriding the set magic method to save mappings.
+     * @param string $name the name of the field.
+     * @param mixed $value the value of the field.
+     * @throws \ActiveORM\Exceptions\ColumnNotDefinedException.
      */
     public function __set($name, $value)
     {
@@ -51,10 +51,10 @@ class ActiveRecord extends Query
     }
 
     /**
-     * Overriding the get magic method to give proper values
-     * @param string $name the name of the field
-     * @return mixed The value of the column
-     * @throws \ActiveORM\Exceptions\ColumnNotDefinedException
+     * Overriding the get magic method to give proper values.
+     * @param string $name the name of the field.
+     * @return mixed The value of the column.
+     * @throws \ActiveORM\Exceptions\ColumnNotDefinedException.
      */
     public function __get($name)
     {
