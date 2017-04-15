@@ -27,7 +27,7 @@ class Queryable
      */
     public function save()
     {
-        if ($this->definition->getTable()->hasBeenUpdated()) {
+        if ($this->definition->getTable()->updated()) {
 
             $row = $this->compileTable($this->definition->getTable());
 
@@ -38,11 +38,13 @@ class Queryable
                     $row,
                     self::createIdentifier($this->definition->getTable()->getIdentifier())
                 );
+                $this->definition->getTable()->refresh();
             }
             else
             {
                 ActiveRecordDB::getDatabase()->insert($this->definition->getTable()->getName(), $row);
                 $this->definition->getTable()->getIdentifier()->setValue(ActiveRecordDB::getDatabase()->id());
+                $this->definition->getTable()->refresh();
             }
 
             foreach ($this->definition->getHasRelationships() as $relationship)

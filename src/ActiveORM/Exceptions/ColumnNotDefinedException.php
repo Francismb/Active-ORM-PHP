@@ -8,8 +8,8 @@ namespace ActiveORM\Exceptions;
  */
 class ColumnNotDefinedException extends \Exception
 {
-    public function __construct($column)
+    public function __construct($table, $column)
     {
-        parent::__construct("Column with the name '". $column ."' was not defined", 0, null);
+        parent::__construct("Could not find column with name '". $column ."' in the table '". $table ."'", 0, null);
     }
 }

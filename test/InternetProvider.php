@@ -8,7 +8,6 @@
 
 use ActiveORM\ActiveRecord;
 use ActiveORM\ActiveRecordDefinition;
-use ActiveORM\Definition\ForeignKeyColumn;
 use ActiveORM\Definition\GenericColumn;
 use ActiveORM\Definition\PrimaryKeyColumn;
 use ActiveORM\Definition\Table;
@@ -19,12 +18,12 @@ class InternetProvider extends ActiveRecord
     public static function define()
     {
         return new ActiveRecordDefinition(
-            new Table('houses', [
+            new Table('internetprovider', [
                 new PrimaryKeyColumn(),
                 new GenericColumn("name", "name", "string"),
             ]), [
-                new HasMany("User", "users", "user_id"),
-                new HasMany("House", "houses", "house_id")
+                new HasMany("User", "users", "internetprovider_id"),
+                new HasMany("House", "houses", "internetprovider_id")
             ]
         );
     }

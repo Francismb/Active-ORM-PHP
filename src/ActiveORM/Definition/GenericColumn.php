@@ -8,33 +8,8 @@ use ActiveORM\Exceptions\IncorrectDataTypeException;
  * Class GenericColumn.
  * @package ActiveORM\Definition
  */
-class GenericColumn implements Column
+class GenericColumn extends Column
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $columnName;
-
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var mixed
-     */
-    private $value;
-
-    /**
-     * @var int
-     */
-    private $originalValue;
-
     /**
      * GenericColumn constructor.
      * @param string $name The string to access this column.
@@ -43,43 +18,14 @@ class GenericColumn implements Column
      */
     public function __construct($name, $columnName, $type)
     {
-        $this->name = $name;
-        $this->type = $type;
-        $this->columnName = $columnName;
-    }
-
-    /**
-     * Returns the name of the column.
-     * @return string The name of the column.
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Returns the name of the column in the table.
-     * @return string The name of the column
-     */
-    public function getColumnName()
-    {
-        return $this->columnName;
-    }
-
-    /**
-     * Returns the value of the column.
-     * @return mixed The value of the column.
-     */
-    public function getValue()
-    {
-        return $this->value;
+        parent::__construct($name, $columnName, $type);
     }
 
     /**
      * Sets the value of the column.
      * @param mixed $value The value of the column.
      * @param bool $originalValue Determines if this is the original value
-     * @throws \ActiveORM\Exceptions\IncorrectDataTypeException
+     * @throws IncorrectDataTypeException
      */
     public function setValue($value, $originalValue = false)
     {
@@ -97,14 +43,5 @@ class GenericColumn implements Column
         {
             throw new IncorrectDataTypeException($this->getName(), $type);
         }
-    }
-
-    /**
-     * Checks to see if the column has been modified.
-     * @return bool
-     */
-    public function hasBeenUpdated()
-    {
-        return $this->value != $this->originalValue;
     }
 }

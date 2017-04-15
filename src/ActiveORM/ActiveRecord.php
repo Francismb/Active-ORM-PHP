@@ -64,7 +64,7 @@ class ActiveRecord extends Queryable
                     return;
                 }
             }
-            throw new Exceptions\ColumnNotDefinedException($name);
+            throw new ColumnNotDefinedException($this->definition->getTable()->getName(), $name);
         }
     }
 
@@ -89,7 +89,7 @@ class ActiveRecord extends Queryable
                     return $relationship->getValue();
                 }
             }
-            throw new Exceptions\ColumnNotDefinedException($name);
+            throw new ColumnNotDefinedException($this->definition->getTable()->getName(), $name);
         }
     }
 
@@ -109,7 +109,7 @@ class ActiveRecord extends Queryable
         }
         else
         {
-            throw new ColumnNotDefinedException($method);
+            throw new ColumnNotDefinedException($this->definition->getTable()->getName(), $method);
         }
     }
 }

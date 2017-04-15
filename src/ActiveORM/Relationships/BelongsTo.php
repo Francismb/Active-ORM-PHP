@@ -63,6 +63,8 @@ class BelongsTo extends Relationship
     {
         if (isset($this->value))
         {
+            $this->value->save();
+
             $this->owner->definition->getTable()->getColumn($this->column)->setValue(
                 $this->value->definition->getTable()->getIdentifier()->getValue()
             );

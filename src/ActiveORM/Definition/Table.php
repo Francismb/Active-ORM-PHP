@@ -95,7 +95,7 @@ class Table
         $index = $this->getColumnIndex($name);
         if ($index == -1)
         {
-            throw new ColumnNotDefinedException($name);
+            throw new ColumnNotDefinedException($this->name, $name);
         }
         return $this->columns[$index];
     }
@@ -132,15 +132,24 @@ class Table
      * Returns true if the table has been updated since load.
      * @return bool
      */
-    public function hasBeenUpdated()
+    public function updated()
     {
         foreach ($this->columns as $column)
         {
-            if ($column->hasBeenUpdated())
+            if ($column->updated())
             {
                 return true;
             }
         }
         return false;
     }
+
+    public function refresh()
+    {
+        foreach ($this->columns as $column)
+        {
+            $column->refresh();
+        }
+    }
+
 }

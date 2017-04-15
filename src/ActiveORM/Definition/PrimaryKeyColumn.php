@@ -8,28 +8,8 @@ use ActiveORM\Exceptions\IncorrectDataTypeException;
  * Class PrimaryKeyColumn.
  * @package ActiveORM\Definition
  */
-class PrimaryKeyColumn implements Column
+class PrimaryKeyColumn extends Column
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $columnName;
-
-    /**
-     * @var int
-     */
-    private $value = null;
-
-    /**
-     * @var int
-     */
-    private $originalValue = null;
-
     /**
      * PrimaryKeyColumn constructor.
      * @param string $name The string to access the column.
@@ -37,35 +17,7 @@ class PrimaryKeyColumn implements Column
      */
     public function __construct($name = 'id', $columnName = 'id')
     {
-        $this->name = $name;
-        $this->columnName = $columnName;
-    }
-
-    /**
-     * Returns the name of the column.
-     * @return string The name of the column.
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Returns the name of the column in the table.
-     * @return string The name of the column
-     */
-    public function getColumnName()
-    {
-        return $this->columnName;
-    }
-
-    /**
-     * Returns the value of the column.
-     * @return mixed The value of the column.
-     */
-    public function getValue()
-    {
-        return $this->value;
+        parent::__construct($name, $columnName, null);
     }
 
     /**
@@ -90,14 +42,5 @@ class PrimaryKeyColumn implements Column
         {
             throw new IncorrectDataTypeException($this->getName(), $type);
         }
-    }
-
-    /**
-     * Checks to see if the column has been modified.
-     * @return bool
-     */
-    public function hasBeenUpdated()
-    {
-        return $this->value != $this->originalValue;
     }
 }

@@ -8,28 +8,8 @@ use ActiveORM\Exceptions\IncorrectDataTypeException;
  * Class PrimaryKeyColumn.
  * @package ActiveORM\Definition
  */
-class ForeignKeyColumn implements Column
+class ForeignKeyColumn extends Column
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $columnName;
-
-    /**
-     * @var int
-     */
-    private $value = null;
-
-    /**
-     * @var int
-     */
-    private $originalValue = null;
-
     /**
      * PrimaryKeyColumn constructor.
      * @param string $name The string to access the column.
@@ -37,35 +17,7 @@ class ForeignKeyColumn implements Column
      */
     public function __construct($name, $columnName)
     {
-        $this->name = $name;
-        $this->columnName = $columnName;
-    }
-
-    /**
-     * Returns the name of the column.
-     * @return string The name of the column.
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Returns the name of the column in the table.
-     * @return string The name of the column
-     */
-    public function getColumnName()
-    {
-        return $this->columnName;
-    }
-
-    /**
-     * Returns the value of the column.
-     * @return mixed The value of the column.
-     */
-    public function getValue()
-    {
-        return $this->value;
+        parent::__construct($name, $columnName, null);
     }
 
     /**
@@ -95,14 +47,5 @@ class ForeignKeyColumn implements Column
         {
             throw new IncorrectDataTypeException($this->getName(), $type);
         }
-    }
-
-    /**
-     * Checks to see if the column has been modified.
-     * @return bool
-     */
-    public function hasBeenUpdated()
-    {
-        return $this->value != $this->originalValue;
     }
 }
