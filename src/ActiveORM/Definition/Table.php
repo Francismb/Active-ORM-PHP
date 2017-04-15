@@ -2,6 +2,8 @@
 
 namespace ActiveORM\Definition;
 
+use ActiveORM\Exceptions\ColumnNotDefinedException;
+
 /**
  * Class Table.
  * Represents a table in a database.
@@ -10,19 +12,29 @@ namespace ActiveORM\Definition;
 class Table
 {
     /**
-     * @var string The name of the table
+     * @var string The name of the table.
      */
     private $name;
 
     /**
-     * @var PrimaryKeyColumn The primary key column of this table
+     * @var PrimaryKeyColumn The primary key column of this table.
      */
     private $identifier;
 
     /**
-     * @var array An array of the columns that this table contains
+     * @var Column[] An array of the columns that this table contains.
      */
     private $columns;
+
+    /**
+     * @var int[] An array of column name indexes to be used with the columns array.
+     */
+    private $columnIndexes;
+
+    /**
+     * @var int[] An array of access name indexes to be used with the columns array.
+     */
+    private $accessIndexes;
 
     /**
      * Table constructor.
@@ -33,13 +45,19 @@ class Table
     {
         $this->name = $name;
 
-        foreach($columns as $column)
+        for ($index = 0; $index < count($columns); $index++)
         {
+            $column = $columns[$index];
+
+            $this->accessIndexes[$column->getName()] = $index;
+            $this->columnIndexes[$column->getColumnName()] = $index;
+
             if ($column instanceof PrimaryKeyColumn)
             {
                 $this->identifier = $column;
             }
-            $this->columns[$column->getName()] = $column;
+
+            $this->columns[] = $column;
         }
     }
 
@@ -74,10 +92,12 @@ class Table
      */
     public function getColumn($name)
     {
-        if (!$this->hasColumn($name)) {
-            throw new \ActiveORM\Exceptions\ColumnNotDefinedException($name);
+        $index = $this->getColumnIndex($name);
+        if ($index == -1)
+        {
+            throw new ColumnNotDefinedException($name);
         }
-        return $this->columns[$name];
+        return $this->columns[$index];
     }
 
     /**
@@ -87,6 +107,40 @@ class Table
      */
     public function hasColumn($name)
     {
-        return isset($this->columns[$name]);
+        return $this->getColumnIndex($name) != -1;
+    }
+
+    /**
+     * Gets the index of a column in the column array
+     * @param string $name The name of the column
+     * @return int The index of the column
+     */
+    private function getColumnIndex($name)
+    {
+        if (isset($this->accessIndexes[$name]))
+        {
+            return $this->accessIndexes[$name];
+        }
+        if (isset($this->columnIndexes[$name]))
+        {
+            return $this->columnIndexes[$name];
+        }
+        return -1;
+    }
+
+    /**
+     * Returns true if the table has been updated since load.
+     * @return bool
+     */
+    public function hasBeenUpdated()
+    {
+        foreach ($this->columns as $column)
+        {
+            if ($column->hasBeenUpdated())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

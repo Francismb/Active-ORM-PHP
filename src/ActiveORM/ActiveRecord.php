@@ -2,16 +2,18 @@
 
 namespace ActiveORM;
 
+use ActiveORM\Exceptions\ColumnNotDefinedException;
+
 /**
  * Class ActiveRecord.
  * @package ActiveORM
  */
-class ActiveRecord extends Query
+class ActiveRecord extends Queryable
 {
     /**
-     * @var \ActiveORM\Definition\Table The definition of the table and columns.
+     * @var ActiveRecordDefinition The definition of the table and columns.
      */
-    private $table;
+    public $definition;
 
     /**
      * Constructs a new ActiveRecord.
@@ -20,33 +22,49 @@ class ActiveRecord extends Query
      */
     public function __construct($columns = [])
     {
-        $this->table = static::define();
-        parent::__construct($this->table);
+        $this->definition = static::define();
+        parent::__construct($this->definition);
 
-        if (count($columns) > 0)
+        foreach ($this->definition->getRelationships() as $relationship)
         {
-            foreach($columns as $name => $value)
-            {
-                $this->__set($name, $value);
-            }
+            $relationship->setOwner($this);
+        }
+
+        foreach($columns as $name => $value)
+        {
+            $this->__set($name, $value);
         }
     }
+
+    /**
+     * Called before saving a ActiveRecord
+     * @throws Exceptions\ValidationFailedException
+     */
+    public function validate() {}
 
     /**
      * Overriding the set magic method to save mappings.
      * @param string $name the name of the field.
      * @param mixed $value the value of the field.
-     * @throws \ActiveORM\Exceptions\ColumnNotDefinedException.
+     * @throws Exceptions\ColumnNotDefinedException.
      */
     public function __set($name, $value)
     {
-        if ($this->table->hasColumn($name))
+        if ($this->definition->getTable()->hasColumn($name))
         {
-            $this->table->getColumn($name)->setValue($value);
+            $this->definition->getTable()->getColumn($name)->setValue($value);
         }
         else
         {
-            throw new \ActiveORM\Exceptions\ColumnNotDefinedException($name);
+            foreach ($this->definition->getRelationships() as $relationship)
+            {
+                if ($relationship->getName() == $name)
+                {
+                    $relationship->setValue($value);
+                    return;
+                }
+            }
+            throw new Exceptions\ColumnNotDefinedException($name);
         }
     }
 
@@ -54,17 +72,44 @@ class ActiveRecord extends Query
      * Overriding the get magic method to give proper values.
      * @param string $name the name of the field.
      * @return mixed The value of the column.
-     * @throws \ActiveORM\Exceptions\ColumnNotDefinedException.
+     * @throws Exceptions\ColumnNotDefinedException.
      */
     public function __get($name)
     {
-        if ($this->table->hasColumn($name))
+        if ($this->definition->getTable()->hasColumn($name))
         {
-            return $this->table->getColumn($name)->getValue();
+            return $this->definition->getTable()->getColumn($name)->getValue();
         }
         else
         {
-            throw new \ActiveORM\Exceptions\ColumnNotDefinedException($name);
+            foreach ($this->definition->getRelationships() as $relationship)
+            {
+                if ($relationship->getName() == $name)
+                {
+                    return $relationship->getValue();
+                }
+            }
+            throw new Exceptions\ColumnNotDefinedException($name);
+        }
+    }
+
+    /**
+     * Overriding the call magic method to allow for foreign key queries.
+     * @param string $method The method name.
+     * @param array $args The method arguments.
+     * @return mixed
+     * @throws Exceptions\ColumnNotDefinedException
+     */
+    // TODO implement queriable relationships
+    public function __call($method, $args)
+    {
+        if ($this->definition->getTable()->hasColumn($method))
+        {
+            $column = $this->definition->getTable()->getColumn($method);
+        }
+        else
+        {
+            throw new ColumnNotDefinedException($method);
         }
     }
 }

@@ -13,34 +13,49 @@ ActiveORM\ActiveRecordDB::initialize([
 ]);
 
 require_once "User.php";
+require_once "House.php";
+require_once "InternetProvider.php";
 
-// Clear user table
-$users = User::findAll();
-echo 'Loaded '. count($users) . ' users ' . "\n";
-foreach ($users as $user)
+function clearDatabase()
 {
-    $user->delete();
-}
-echo 'Deleted all users' . "\n\n";
+    $users = User::findAll();
+    foreach ($users as $user)
+    {
+        $user->delete();
+    }
 
-// Create a user 1 by using magic methods
+    $houses = House::findAll();
+    foreach ($houses as $house)
+    {
+        $house->delete();
+    }
+
+    $internetProviders = InternetProvider::findAll();
+    foreach ($internetProviders as $internetProvider)
+    {
+        $internetProvider->delete();
+    }
+}
+
+/**
+ * Generic ORM functionality
+ */
+clearDatabase();
+
+// Create a user
 $user = new User();
 $user->email = "test@gmail.com12222";
 $user->password = "supersecretpasswor1d";
 $user->save();
 
-// Verify if user 1 was created
-if ($user->id != null) {
-    echo 'User 1 saved successfully(ID='. $user->id .')' . "\n";
-} else {
+// Verify if user was created
+if ($user->id == null) {
     die('Could not create user 1');
 }
 
 // Find the user we just created
 $user = User::findOne(["email" => "test@gmail.com12222"]);
-if ($user != null) {
-    echo 'Found user 1(ID=' . $user->id . ' : EMAIL=' . $user->email . ')' . "\n\n";
-} else {
+if ($user == null) {
     die('Could not find user 1');
 }
 
@@ -49,18 +64,64 @@ $user2 = new User(["email" => "test@123mail.com", "password" => "supersecretpass
 $user2->save();
 
 // Check if user 2 was created
-if ($user2->id != null) {
-    echo 'User 2 saved successfully(ID='. $user->id .')' . "\n\n";
-} else {
+if ($user2->id == null) {
     echo 'Could not create user 2';
 }
 
 // Test exists function
-echo 'Does user with the email `test@gmail.com12222` exist(' . (User::exists(['email' => 'test@gmail.com12222']) ? 'true' : 'false') . ')' . "\n\n";
+if (!User::exists(['email' => 'test@gmail.com12222']))
+{
+    echo 'Could not fnd user with email of test@gmail.com12222';
+}
 
 // Test count function
-echo 'There are ' . User::count() . ' users in the database' . "\n\n";
+if (!User::count())
+{
+    echo 'Could not count any users';
+}
 
 // Find all users with the same password
-$usersWithSamePassword = User::findAll(["password" => "supersecretpasswor1d"]);
-echo 'Found ' . count($usersWithSamePassword) . ' Users with the password `supersecretpasswor1d`';
+$usersWithSamePassword = User::findAll(["password_digest" => "supersecretpasswor1d"]);
+if (!count($usersWithSamePassword))
+{
+    echo 'Could not find any users with the same password';
+}
+
+/**
+ * Relationship ORM functionality
+ */
+clearDatabase();
+
+$user = new User();
+$user->email = "test@gmail.com12222";
+$user->password = "supersecretpasswor1d";
+
+// Has many test
+$house1 = new House(["address" => "123 Standmore Road"]);
+$house2 = new House(["address" => "Some odd asf address"]);
+
+$internetProvider = new InternetProvider(["name" => "Telecom"]);
+
+$user->houses[] = $house1;
+$user->houses[] = $house2;
+
+$user->internetProvider = $internetProvider;
+
+$user->save();
+
+$user = User::findByID(1);
+
+if ($user == null)
+{
+    echo 'Could not load user';
+}
+
+if (count($user->houses) != 2)
+{
+    echo 'User does not have two houses';
+}
+
+if ($user->internetProvider == null)
+{
+    echo 'User does not have internet provider';
+}

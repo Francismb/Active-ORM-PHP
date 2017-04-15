@@ -2,8 +2,10 @@
 
 namespace ActiveORM\Definition;
 
+use ActiveORM\Exceptions\IncorrectDataTypeException;
+
 /**
- * Class ForeignKeyColumn.
+ * Class PrimaryKeyColumn.
  * @package ActiveORM\Definition
  */
 class ForeignKeyColumn implements Column
@@ -14,69 +16,93 @@ class ForeignKeyColumn implements Column
     private $name;
 
     /**
-     * @var int
+     * @var string
      */
-    private $rawValue = null;
+    private $columnName;
 
     /**
-     * @var \ActiveORM\ActiveRecord
+     * @var int
      */
     private $value = null;
 
     /**
-     * Has one relationship.
+     * @var int
      */
-    const HAS_ONE = 1;
+    private $originalValue = null;
 
     /**
-     * Has many relationship.
+     * PrimaryKeyColumn constructor.
+     * @param string $name The string to access the column.
+     * @param string $columnName The name of the column.
      */
-    const HAS_MANY = 2;
-
-    /**
-     * Belongs to relationship.
-     */
-    const BELONGS_TO = 3;
-
-    /**
-     * ForeignKeyColumn constructor.
-     * @param string $name The name of the column
-     * @param $relationship
-     */
-    public function __construct($name, $relationship)
+    public function __construct($name, $columnName)
     {
         $this->name = $name;
+        $this->columnName = $columnName;
     }
 
+    /**
+     * Returns the name of the column.
+     * @return string The name of the column.
+     */
     public function getName()
     {
         return $this->name;
     }
 
-    public function getType()
+    /**
+     * Returns the name of the column in the table.
+     * @return string The name of the column
+     */
+    public function getColumnName()
     {
-        return 'integer';
+        return $this->columnName;
     }
 
+    /**
+     * Returns the value of the column.
+     * @return mixed The value of the column.
+     */
     public function getValue()
     {
         return $this->value;
     }
 
-    public function setValue($value)
+    /**
+     * Sets the value of the column.
+     * @param mixed $value The value of the column.
+     * @param bool $originalValue Determines if this is the original value
+     * @throws \ActiveORM\Exceptions\IncorrectDataTypeException
+     */
+    public function setValue($value, $originalValue = false)
     {
-        $type = gettype($value);
-        if ($type == 'integer')
+        if ($value == null)
         {
-            $this->rawValue = $value;
+            return;
         }
-        else if ($type == 'object')
+
+        $type = gettype($value);
+        if ($type == "int" || ($type == "string" && is_numeric($value)))
         {
             $this->value = $value;
+
+            if ($originalValue)
+            {
+                $this->originalValue = $value;
+            }
         }
         else
         {
-            throw new \ActiveORM\Exceptions\IncorrectDataTypeException($this->getName(), $type);
+            throw new IncorrectDataTypeException($this->getName(), $type);
         }
+    }
+
+    /**
+     * Checks to see if the column has been modified.
+     * @return bool
+     */
+    public function hasBeenUpdated()
+    {
+        return $this->value != $this->originalValue;
     }
 }

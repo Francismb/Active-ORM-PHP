@@ -9,16 +9,16 @@ namespace ActiveORM\Definition;
 interface Column
 {
     /**
-     * Returns the name of the column.
-     * @return string The name of the column.
+     * Returns the name we use to access the column.
+     * @return string The name used to access the column.
      */
     public function getName();
 
     /**
-     * Returns the data type of the column.
-     * @return string The data type of the column.
+     * Returns the name of the column in the table.
+     * @return string The name of the column
      */
-    public function getType();
+    public function getColumnName();
 
     /**
      * Returns the value of the column.
@@ -29,6 +29,14 @@ interface Column
     /**
      * Sets the value of the column.
      * @param mixed $value The value of the column.
+     * @param bool $originalValue Determines if this is the original value
+     * @return
      */
-    public function setValue($value);
+    public function setValue($value, $originalValue = false);
+
+    /**
+     * Checks to see if the column has been modified.
+     * @return bool
+     */
+    public function hasBeenUpdated();
 }
