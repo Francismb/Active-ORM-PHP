@@ -7,6 +7,7 @@ use ActiveORM\Definition\PrimaryKeyColumn;
 use ActiveORM\Definition\GenericColumn;
 use ActiveORM\Relationships\BelongsTo;
 use ActiveORM\Relationships\HasMany;
+use ActiveORM\Relationships\HasOne;
 
 class User extends ActiveRecord
 {
@@ -20,7 +21,8 @@ class User extends ActiveRecord
                 new GenericColumn("password", "password_digest", "string"),
             ]), [
                 new HasMany("House", "houses", "user_id"),
-                new BelongsTo("InternetProvider", "internetProvider", "internetprovider_id")
+                new BelongsTo("InternetProvider", "internetProvider", "internetprovider_id"),
+                new HasOne("Job", "job", "user_id")
             ]
         );
     }

@@ -30,7 +30,7 @@ class GenericColumn extends Column
     public function setValue($value, $originalValue = false)
     {
         $type = gettype($value);
-        if ($type == $this->type)
+        if ($type == $this->type || settype($value, $this->type))
         {
             $this->value = $value;
 
@@ -41,7 +41,7 @@ class GenericColumn extends Column
         }
         else
         {
-            throw new IncorrectDataTypeException($this->getName(), $type);
+            throw new IncorrectDataTypeException($this->getName(), $this->type, $type);
         }
     }
 }

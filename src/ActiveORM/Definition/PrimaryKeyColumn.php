@@ -40,7 +40,7 @@ class PrimaryKeyColumn extends Column
         }
         else
         {
-            throw new IncorrectDataTypeException($this->getName(), $type);
+            throw new IncorrectDataTypeException($this->getName(), "int|string", $type);
         }
     }
 }

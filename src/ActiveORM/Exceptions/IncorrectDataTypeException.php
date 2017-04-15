@@ -8,8 +8,8 @@ namespace ActiveORM\Exceptions;
  */
 class IncorrectDataTypeException extends \Exception
 {
-    public function __construct($column, $type)
+    public function __construct($column, $expectedType, $type)
     {
-        parent::__construct($column . ' column is not the data type ' . $type);
+        parent::__construct($column . " column was meant to be of data type '". $expectedType ."' but was of data type '". $type ."'");
     }
 }

@@ -15,6 +15,7 @@ ActiveORM\ActiveRecordDB::initialize([
 require_once "User.php";
 require_once "House.php";
 require_once "InternetProvider.php";
+require_once "Job.php";
 
 function clearDatabase()
 {
@@ -34,6 +35,12 @@ function clearDatabase()
     foreach ($internetProviders as $internetProvider)
     {
         $internetProvider->delete();
+    }
+
+    $jobs = Job::findAll();
+    foreach ($jobs as $job)
+    {
+        $job->delete();
     }
 }
 
@@ -102,10 +109,14 @@ $house2 = new House(["address" => "Some odd asf address"]);
 
 $internetProvider = new InternetProvider(["name" => "Telecom"]);
 
+$job = new Job(["title" => "Senior Software Engineer", "salary" => 100000]);
+
 $user->houses[] = $house1;
 $user->houses[] = $house2;
 
 $user->internetProvider = $internetProvider;
+
+$user->job = $job;
 
 $user->save();
 
@@ -124,4 +135,9 @@ if (count($user->houses) != 2)
 if ($user->internetProvider == null)
 {
     echo 'User does not have internet provider';
+}
+
+if ($user->job == null)
+{
+    echo 'User does not have a job';
 }
