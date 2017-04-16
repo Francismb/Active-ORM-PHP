@@ -49,12 +49,7 @@ class Queryable
                 ActiveRecordDB::getInstance()->debug();
             }
 
-            foreach ($this->definition->getHasRelationships() as $relationship)
-            {
-                $relationship->save();
-            }
-
-            foreach ($this->definition->getBelongRelationships() as $relationship)
+            foreach ($this->definition->getRelationships() as $relationship)
             {
                 $relationship->save();
             }

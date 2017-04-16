@@ -8,7 +8,6 @@
 
 namespace ActiveORM\Validation;
 
-
 trait Validatable
 {
 
@@ -50,7 +49,7 @@ trait Validatable
 
     /**
      * @param string $message The error message.
-     * @param function $function The validation function.
+     * @param \Closure $function The validation function.
      */
     public function addCustomValidator($message, $function)
     {

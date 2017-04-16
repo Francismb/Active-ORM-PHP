@@ -26,10 +26,6 @@ class ActiveRecordDefinition
      */
     private $relationships;
 
-    private $hasRelationships = [];
-
-    private $belongRelationships = [];
-
     /**
      * ActiveRecordDefinition constructor.
      * @param Table $table
@@ -45,18 +41,6 @@ class ActiveRecordDefinition
 
         $this->table = $table;
         $this->relationships = $relationships;
-
-        foreach($this->relationships as $relationship)
-        {
-            if ($relationship instanceof HasMany || $relationship instanceof HasOne)
-            {
-                $this->hasRelationships[] = $relationship;
-            }
-            else
-            {
-                $this->belongRelationships[] = $relationship;
-            }
-        }
     }
 
     public function getTable()
@@ -67,15 +51,5 @@ class ActiveRecordDefinition
     public function getRelationships()
     {
         return $this->relationships;
-    }
-
-    public function getHasRelationships()
-    {
-        return $this->hasRelationships;
-    }
-
-    public function getBelongRelationships()
-    {
-        return $this->belongRelationships;
     }
 }
