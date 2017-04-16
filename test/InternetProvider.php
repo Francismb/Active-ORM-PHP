@@ -18,7 +18,7 @@ class InternetProvider extends ActiveRecord
     public static function define()
     {
         return new ActiveRecordDefinition(
-            new Table('internetprovider', [
+            new Table('internetproviders', [
                 new PrimaryKeyColumn(),
                 new GenericColumn("name", "name", "string"),
             ]), [

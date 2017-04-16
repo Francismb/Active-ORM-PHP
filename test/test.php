@@ -19,29 +19,10 @@ require_once "Job.php";
 
 function clearDatabase()
 {
-    $users = User::findAll();
-    foreach ($users as $user)
-    {
-        $user->delete();
-    }
-
-    $houses = House::findAll();
-    foreach ($houses as $house)
-    {
-        $house->delete();
-    }
-
-    $internetProviders = InternetProvider::findAll();
-    foreach ($internetProviders as $internetProvider)
-    {
-        $internetProvider->delete();
-    }
-
-    $jobs = Job::findAll();
-    foreach ($jobs as $job)
-    {
-        $job->delete();
-    }
+    \ActiveORM\ActiveRecordDB::getDatabase()->delete("users", []);
+    \ActiveORM\ActiveRecordDB::getDatabase()->delete("houses", []);
+    \ActiveORM\ActiveRecordDB::getDatabase()->delete("internetproviders", []);
+    \ActiveORM\ActiveRecordDB::getDatabase()->delete("jobs", []);
 }
 
 /**
@@ -57,13 +38,13 @@ $user->save();
 
 // Verify if user was created
 if ($user->id == null) {
-    die('Could not create user 1');
+    die('ERROR - Could not create user 1');
 }
 
 // Find the user we just created
 $user = User::findOne(["email" => "test@gmail.com12222"]);
 if ($user == null) {
-    die('Could not find user 1');
+    die('ERROR - Could not find user 1');
 }
 
 // Create a user 2 by passing data to a constructor
@@ -72,26 +53,26 @@ $user2->save();
 
 // Check if user 2 was created
 if ($user2->id == null) {
-    echo 'Could not create user 2';
+    die('ERROR - Could not create user 2');
 }
 
-// Test exists function
+// SaveTest exists function
 if (!User::exists(['email' => 'test@gmail.com12222']))
 {
-    echo 'Could not fnd user with email of test@gmail.com12222';
+    die('ERROR - Could not fnd user with email of test@gmail.com12222');
 }
 
-// Test count function
+// SaveTest count function
 if (!User::count())
 {
-    echo 'Could not count any users';
+    die('ERROR - Could not count any users');
 }
 
 // Find all users with the same password
 $usersWithSamePassword = User::findAll(["password_digest" => "supersecretpasswor1d"]);
 if (!count($usersWithSamePassword))
 {
-    echo 'Could not find any users with the same password';
+    die('ERROR - Could not find any users with the same password');
 }
 
 /**
@@ -124,20 +105,22 @@ $user = User::findByID(1);
 
 if ($user == null)
 {
-    echo 'Could not load user';
+    die('ERROR - Could not load user');
 }
 
 if (count($user->houses) != 2)
 {
-    echo 'User does not have two houses';
+    die('ERROR - User does not have two houses');
 }
 
 if ($user->internetProvider == null)
 {
-    echo 'User does not have internet provider';
+    die('ERROR - User does not have internet provider');
 }
 
 if ($user->job == null)
 {
-    echo 'User does not have a job';
+    die('ERROR - User does not have a job');
 }
+
+echo "\n\nAll tests passed";
