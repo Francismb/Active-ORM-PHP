@@ -30,45 +30,37 @@ function clearDatabase()
  */
 clearDatabase();
 
-// Create a user
 $user = new User();
 $user->email = "test@gmail.com12222";
 $user->password = "supersecretpasswor1d";
 $user->save();
 
-// Verify if user was created
 if ($user->id == null) {
     die('ERROR - Could not create user 1');
 }
 
-// Find the user we just created
 $user = User::findOne(["email" => "test@gmail.com12222"]);
 if ($user == null) {
     die('ERROR - Could not find user 1');
 }
 
-// Create a user 2 by passing data to a constructor
 $user2 = new User(["email" => "test@123mail.com", "password" => "supersecretpasswor1d"]);
 $user2->save();
 
-// Check if user 2 was created
 if ($user2->id == null) {
     die('ERROR - Could not create user 2');
 }
 
-// SaveTest exists function
 if (!User::exists(['email' => 'test@gmail.com12222']))
 {
     die('ERROR - Could not fnd user with email of test@gmail.com12222');
 }
 
-// SaveTest count function
 if (!User::count())
 {
     die('ERROR - Could not count any users');
 }
 
-// Find all users with the same password
 $usersWithSamePassword = User::findAll(["password_digest" => "supersecretpasswor1d"]);
 if (!count($usersWithSamePassword))
 {
@@ -121,6 +113,41 @@ if ($user->internetProvider == null)
 if ($user->job == null)
 {
     die('ERROR - User does not have a job');
+}
+
+/**
+ * Validation tests
+ */
+
+clearDatabase();
+
+$newJob = new Job();
+$newJob->salary = 25000;
+
+if ($newJob->valid())
+{
+    die('ERROR - Job is not meant to be valid');
+}
+
+if (count($newJob->getValidationErrors()) != 2)
+{
+    die('ERROR - Job is meant to have two validation errors');
+}
+
+$secondJob = new Job();
+$secondJob->salary = 150000;
+$secondJob->title = "Expert Noob";
+
+if (!$secondJob->valid())
+{
+    die('ERROR- Job was meant to be valid');
+}
+
+$secondJob->save();
+
+if (!$secondJob->id)
+{
+    die('Could not save job');
 }
 
 echo "\n\nAll tests passed";

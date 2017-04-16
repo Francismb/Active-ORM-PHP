@@ -8,11 +8,17 @@
 
 namespace ActiveORM\Exceptions;
 
-
-class ValidationFailedException extends \Exception
+/**
+ * Class ValidationFailedException.
+ * @package ActiveORM\Exceptions
+ */
+class ValidationException extends \Exception
 {
+    private $message;
+
     public function __construct($message)
     {
         parent::__construct($message);
+        $this->message = $message;
     }
 }

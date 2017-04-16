@@ -9,35 +9,35 @@ namespace ActiveORM\Definition;
 abstract class Column
 {
     /**
-     * @var string
+     * @var string The name of this column used to access it.
      */
     protected $name;
 
     /**
-     * @var string
+     * @var string The name of the column in the database.
      */
     protected $columnName;
 
     /**
-     * @var string
+     * @var string The datatype of this column.
      */
     protected $type;
 
     /**
-     * @var mixed
+     * @var mixed The value of this column.
      */
     protected $value;
 
     /**
-     * @var int
+     * @var mixed The original value of this column. Used to determine if it has been changed.
      */
     protected $originalValue;
 
     /**
      * Column constructor.
-     * @param string $name The string to access this column.
-     * @param string $columnName The name of the column.
-     * @param string $type The data type of the column.
+     * @param string $name The name of this column used to access it.
+     * @param string $columnName The name of the column in the database.
+     * @param string $type The datatype of the column.
      */
     public function __construct($name, $columnName, $type)
     {
@@ -47,8 +47,8 @@ abstract class Column
     }
 
     /**
-     * Returns the name we use to access the column.
-     * @return string The name used to access the column.
+     * Returns the name of this column used to access it.
+     * @return string The name of this column used to access it.
      */
     public function getName()
     {
@@ -56,8 +56,8 @@ abstract class Column
     }
 
     /**
-     * Returns the name of the column in the table.
-     * @return string The name of the column
+     * Returns the name of the column in the database.
+     * @return string The name of the column in the database.
      */
     public function getColumnName()
     {

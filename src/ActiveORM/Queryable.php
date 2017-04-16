@@ -27,7 +27,7 @@ class Queryable
      */
     public function save()
     {
-        if ($this->definition->getTable()->updated()) {
+        if ($this->definition->getTable()->updated() && $this->valid()) {
 
             $row = $this->compileTable($this->definition->getTable());
 
@@ -39,12 +39,14 @@ class Queryable
                     self::createIdentifier($this->definition->getTable()->getIdentifier())
                 );
                 $this->definition->getTable()->refresh();
+                ActiveRecordDB::getInstance()->debug();
             }
             else
             {
                 ActiveRecordDB::getDatabase()->insert($this->definition->getTable()->getName(), $row);
                 $this->definition->getTable()->getIdentifier()->setValue(ActiveRecordDB::getDatabase()->id());
                 $this->definition->getTable()->refresh();
+                ActiveRecordDB::getInstance()->debug();
             }
 
             foreach ($this->definition->getHasRelationships() as $relationship)
@@ -66,6 +68,7 @@ class Queryable
         if ($this->definition->getTable()->getIdentifier()->getValue() != null)
         {
             ActiveRecordDB::getDatabase()->delete($this->definition->getTable()->getName(), self::createIdentifier($this->definition->getTable()->getIdentifier()));
+            ActiveRecordDB::getInstance()->debug();
         }
     }
 
@@ -90,6 +93,7 @@ class Queryable
         $definition = static::define();
 
         $row = ActiveRecordDB::getDatabase()->get($definition->getTable()->getName(), '*', $criteria);
+        ActiveRecordDB::getInstance()->debug();
 
         if ($row)
         {
@@ -116,6 +120,7 @@ class Queryable
         $definition = static::define();
 
         $rows = ActiveRecordDB::getDatabase()->select($definition->getTable()->getName(), '*', $criteria);
+        ActiveRecordDB::getInstance()->debug();
 
         if ($rows)
         {

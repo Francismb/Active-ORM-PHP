@@ -117,4 +117,9 @@ class ActiveRecordDB
     public static function getDatabase() {
         return self::getInstance()->database;
     }
+
+    public function debug()
+    {
+        echo $this->database->last() . "\n";
+    }
 }

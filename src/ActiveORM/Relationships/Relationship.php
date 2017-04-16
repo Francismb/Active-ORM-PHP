@@ -14,30 +14,30 @@ use ActiveORM\ActiveRecord;
 abstract class Relationship
 {
     /**
-     * @var ActiveRecord|String
+     * @var string The name of the class.
      */
     protected $class;
 
     /**
-     * @var string
+     * @var string The name of this relationship used to access it.
      */
     protected $name;
 
     /**
-     * @var string
+     * @var string The name of the column in the database
      */
     protected $column;
 
     /**
-     * @var ActiveRecord
+     * @var ActiveRecord The owner of this relationship
      */
     protected $owner;
 
     /***
      * Relationship constructor.
-     * @param string $class
-     * @param string $name
-     * @param string $column
+     * @param string $class The name of the class.
+     * @param string $name  The name of this relationship used to access it.
+     * @param string $column The name of the column in the database
      */
     public function __construct($class, $name, $column)
     {
@@ -64,6 +64,7 @@ abstract class Relationship
     public abstract function save();
 
     /**
+     * Sets the owner of the relationship.
      * @param ActiveRecord $owner
      */
     public function setOwner($owner)
@@ -71,6 +72,9 @@ abstract class Relationship
         $this->owner = $owner;
     }
 
+    /**
+     * @return string The name of this relationship used to access it.
+     */
     public function getName()
     {
         return $this->name;

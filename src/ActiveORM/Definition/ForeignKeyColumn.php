@@ -12,8 +12,8 @@ class ForeignKeyColumn extends Column
 {
     /**
      * PrimaryKeyColumn constructor.
-     * @param string $name The string to access the column.
-     * @param string $columnName The name of the column.
+     * @param string $name The name of this column used to access it.
+     * @param string $columnName The name of the column in the database.
      */
     public function __construct($name, $columnName)
     {
@@ -22,9 +22,9 @@ class ForeignKeyColumn extends Column
 
     /**
      * Sets the value of the column.
-     * @param mixed $value The value of the column.
+     * @param int|string $value The value of the column.
      * @param bool $originalValue Determines if this is the original value
-     * @throws \ActiveORM\Exceptions\IncorrectDataTypeException
+     * @throws IncorrectDataTypeException
      */
     public function setValue($value, $originalValue = false)
     {

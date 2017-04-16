@@ -129,7 +129,7 @@ class Table
     }
 
     /**
-     * Returns true if the table has been updated since load.
+     * Returns true if any table values have been updated since load.
      * @return bool
      */
     public function updated()
@@ -144,6 +144,9 @@ class Table
         return false;
     }
 
+    /**
+     * Refreshes the table setting the original values to the current values.
+     */
     public function refresh()
     {
         foreach ($this->columns as $column)

@@ -3,6 +3,7 @@
 namespace ActiveORM;
 
 use ActiveORM\Exceptions\ColumnNotDefinedException;
+use ActiveORM\Validation\Validatable;
 
 /**
  * Class ActiveRecord.
@@ -10,6 +11,11 @@ use ActiveORM\Exceptions\ColumnNotDefinedException;
  */
 class ActiveRecord extends Queryable
 {
+    /**
+     * Use the validatable trait.
+     */
+    use Validatable;
+
     /**
      * @var ActiveRecordDefinition The definition of the table and columns.
      */
@@ -34,13 +40,12 @@ class ActiveRecord extends Queryable
         {
             $this->__set($name, $value);
         }
-    }
 
-    /**
-     * Called before saving a ActiveRecord
-     * @throws Exceptions\ValidationFailedException
-     */
-    public function validate() {}
+        if (method_exists($this, "validate"))
+        {
+            $this->validate();
+        }
+    }
 
     /**
      * Overriding the set magic method to save mappings.

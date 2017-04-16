@@ -13,7 +13,7 @@ use ActiveORM\ActiveRecord;
 class BelongsTo extends Relationship
 {
     /**
-     * @var ActiveRecord An array of active records.
+     * @var ActiveRecord The value of this relationship
      */
     private $value;
 

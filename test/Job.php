@@ -5,7 +5,9 @@ use ActiveORM\Definition\ForeignKeyColumn;
 use ActiveORM\Definition\GenericColumn;
 use ActiveORM\Definition\PrimaryKeyColumn;
 use ActiveORM\Definition\Table;
+use ActiveORM\Exceptions\ValidationException;
 use ActiveORM\Relationships\BelongsTo;
+use ActiveORM\Validation\ValidationError;
 
 /**
  * Created by PhpStorm.
@@ -15,6 +17,14 @@ use ActiveORM\Relationships\BelongsTo;
  */
 class Job extends ActiveRecord
 {
+    public function validate()
+    {
+        $this->addPresenceValidator("title", "No job title specified");
+        $this->addCustomValidator("The job salary is less than 50k", function() {
+            return $this->salary > 50000;
+        });
+    }
+
     public static function define()
     {
         return new ActiveRecordDefinition(
