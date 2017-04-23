@@ -34,8 +34,7 @@ class ActiveRecordDefinition
      */
     public function __construct($table, $relationships)
     {
-        if (count($table->getColumns()) == 0)
-        {
+        if (count($table->getColumns()) == 0) {
             throw new \Exception('ActiveRecordDefinition requires at least one column to be defined in the table');
         }
 

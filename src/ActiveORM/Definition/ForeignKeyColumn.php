@@ -28,23 +28,17 @@ class ForeignKeyColumn extends Column
      */
     public function setValue($value, $originalValue = false)
     {
-        if ($value == null)
-        {
+        if ($value == null) {
             return;
         }
-
         $type = gettype($value);
-        if ($type == "int" || ($type == "string" && is_numeric($value)))
-        {
+        if ($type == "int" || ($type == "string" && is_numeric($value))) {
             $this->value = $value;
 
-            if ($originalValue)
-            {
+            if ($originalValue) {
                 $this->originalValue = $value;
             }
-        }
-        else
-        {
+        } else {
             throw new IncorrectDataTypeException($this->getName(), "int|string", $type);
         }
     }

@@ -10,7 +10,6 @@ namespace ActiveORM\Validation;
 
 trait Validatable
 {
-
     /**
      * @var Validator[] The validators for this ActiveRecord.
      */
@@ -28,10 +27,8 @@ trait Validatable
     public function valid()
     {
         $this->errors = [];
-        foreach ($this->validators as $validator)
-        {
-            if (!$validator->valid())
-            {
+        foreach ($this->validators as $validator) {
+            if (!$validator->valid()) {
                 $this->errors[] = $validator->getErrorMessage();
             }
         }

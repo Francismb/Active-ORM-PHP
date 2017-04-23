@@ -45,15 +45,13 @@ class Table
     {
         $this->name = $name;
 
-        for ($index = 0; $index < count($columns); $index++)
-        {
+        for ($index = 0; $index < count($columns); $index++) {
             $column = $columns[$index];
 
             $this->accessIndexes[$column->getName()] = $index;
             $this->columnIndexes[$column->getColumnName()] = $index;
 
-            if ($column instanceof PrimaryKeyColumn)
-            {
+            if ($column instanceof PrimaryKeyColumn) {
                 $this->identifier = $column;
             }
 
@@ -93,8 +91,7 @@ class Table
     public function getColumn($name)
     {
         $index = $this->getColumnIndex($name);
-        if ($index == -1)
-        {
+        if ($index == -1) {
             throw new ColumnNotDefinedException($this->name, $name);
         }
         return $this->columns[$index];
@@ -117,12 +114,10 @@ class Table
      */
     private function getColumnIndex($name)
     {
-        if (isset($this->accessIndexes[$name]))
-        {
+        if (isset($this->accessIndexes[$name])) {
             return $this->accessIndexes[$name];
         }
-        if (isset($this->columnIndexes[$name]))
-        {
+        if (isset($this->columnIndexes[$name])) {
             return $this->columnIndexes[$name];
         }
         return -1;
@@ -134,10 +129,8 @@ class Table
      */
     public function updated()
     {
-        foreach ($this->columns as $column)
-        {
-            if ($column->updated())
-            {
+        foreach ($this->columns as $column) {
+            if ($column->updated()) {
                 return true;
             }
         }
@@ -149,8 +142,7 @@ class Table
      */
     public function refresh()
     {
-        foreach ($this->columns as $column)
-        {
+        foreach ($this->columns as $column) {
             $column->refresh();
         }
     }

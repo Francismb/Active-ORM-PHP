@@ -29,29 +29,35 @@ class Queryable
     {
         if ($this->definition->getTable()->updated() && $this->valid()) {
 
+            if (!ActiveRecordDB::getDatabase()->pdo->inTransaction()) {
+                $createdTransaction = ActiveRecordDB::getDatabase()->pdo->beginTransaction();
+            }
+
             $row = $this->compileTable($this->definition->getTable());
 
-            if ($this->definition->getTable()->getIdentifier()->getValue() != null)
-            {
+            if ($this->definition->getTable()->getIdentifier()->getValue() != null) {
+
                 ActiveRecordDB::getDatabase()->update(
                     $this->definition->getTable()->getName(),
                     $row,
                     self::createIdentifier($this->definition->getTable()->getIdentifier())
                 );
+
                 $this->definition->getTable()->refresh();
                 ActiveRecordDB::getInstance()->debug();
-            }
-            else
-            {
+            } else {
                 ActiveRecordDB::getDatabase()->insert($this->definition->getTable()->getName(), $row);
                 $this->definition->getTable()->getIdentifier()->setValue(ActiveRecordDB::getDatabase()->id());
                 $this->definition->getTable()->refresh();
                 ActiveRecordDB::getInstance()->debug();
             }
 
-            foreach ($this->definition->getRelationships() as $relationship)
-            {
+            foreach ($this->definition->getRelationships() as $relationship) {
                 $relationship->save();
+            }
+
+            if (isset($createdTransaction)) {
+                ActiveRecordDB::getDatabase()->pdo->commit();
             }
         }
     }
@@ -60,8 +66,7 @@ class Queryable
      * Deletes a record from the database if it exists
      */
     public function delete() {
-        if ($this->definition->getTable()->getIdentifier()->getValue() != null)
-        {
+        if ($this->definition->getTable()->getIdentifier()->getValue() != null) {
             ActiveRecordDB::getDatabase()->delete($this->definition->getTable()->getName(), self::createIdentifier($this->definition->getTable()->getIdentifier()));
             ActiveRecordDB::getInstance()->debug();
         }
@@ -90,12 +95,10 @@ class Queryable
         $row = ActiveRecordDB::getDatabase()->get($definition->getTable()->getName(), '*', $criteria);
         ActiveRecordDB::getInstance()->debug();
 
-        if ($row)
-        {
+        if ($row) {
             $model = new static();
 
-            foreach ($row as $column => $value)
-            {
+            foreach ($row as $column => $value) {
                 $model->definition->getTable()->getColumn($column)->setValue($value, true);
             }
 
@@ -117,17 +120,18 @@ class Queryable
         $rows = ActiveRecordDB::getDatabase()->select($definition->getTable()->getName(), '*', $criteria);
         ActiveRecordDB::getInstance()->debug();
 
-        if ($rows)
-        {
+        if ($rows) {
+
             $models = [];
-            foreach ($rows as $row)
-            {
+
+            foreach ($rows as $row) {
+
                 $model = new static();
-                foreach ($row as $column => $value)
-                {
+                foreach ($row as $column => $value) {
                     $model->definition->getTable()->getColumn($column)->setValue($value, true);
                 }
                 $models[] = $model;
+
             }
             return new \ArrayObject($models);
         }
@@ -166,8 +170,7 @@ class Queryable
     {
         $data = [];
 
-        foreach($table->getColumns() as $column)
-        {
+        foreach($table->getColumns() as $column) {
             $data[$column->getColumnName()] = $column->getValue();
         }
 

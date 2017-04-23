@@ -31,18 +31,15 @@ class ActiveRecord extends Queryable
         $this->definition = static::define();
         parent::__construct($this->definition);
 
-        foreach ($this->definition->getRelationships() as $relationship)
-        {
+        foreach ($this->definition->getRelationships() as $relationship) {
             $relationship->setOwner($this);
         }
 
-        foreach($columns as $name => $value)
-        {
+        foreach($columns as $name => $value) {
             $this->__set($name, $value);
         }
 
-        if (method_exists($this, "validate"))
-        {
+        if (method_exists($this, "validate")) {
             $this->validate();
         }
     }
@@ -55,16 +52,11 @@ class ActiveRecord extends Queryable
      */
     public function __set($name, $value)
     {
-        if ($this->definition->getTable()->hasColumn($name))
-        {
+        if ($this->definition->getTable()->hasColumn($name)) {
             $this->definition->getTable()->getColumn($name)->setValue($value);
-        }
-        else
-        {
-            foreach ($this->definition->getRelationships() as $relationship)
-            {
-                if ($relationship->getName() == $name)
-                {
+        } else {
+            foreach ($this->definition->getRelationships() as $relationship) {
+                if ($relationship->getName() == $name) {
                     $relationship->setValue($value);
                     return;
                 }
@@ -81,16 +73,11 @@ class ActiveRecord extends Queryable
      */
     public function __get($name)
     {
-        if ($this->definition->getTable()->hasColumn($name))
-        {
+        if ($this->definition->getTable()->hasColumn($name)) {
             return $this->definition->getTable()->getColumn($name)->getValue();
-        }
-        else
-        {
-            foreach ($this->definition->getRelationships() as $relationship)
-            {
-                if ($relationship->getName() == $name)
-                {
+        } else {
+            foreach ($this->definition->getRelationships() as $relationship) {
+                if ($relationship->getName() == $name) {
                     return $relationship->getValue();
                 }
             }
@@ -108,12 +95,9 @@ class ActiveRecord extends Queryable
     // TODO implement queriable relationships
     public function __call($method, $args)
     {
-        if ($this->definition->getTable()->hasColumn($method))
-        {
+        if ($this->definition->getTable()->hasColumn($method)) {
             $column = $this->definition->getTable()->getColumn($method);
-        }
-        else
-        {
+        } else {
             throw new ColumnNotDefinedException($this->definition->getTable()->getName(), $method);
         }
     }

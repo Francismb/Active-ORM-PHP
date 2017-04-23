@@ -30,17 +30,13 @@ class GenericColumn extends Column
     public function setValue($value, $originalValue = false)
     {
         $type = gettype($value);
-        if ($type == $this->type || settype($value, $this->type))
-        {
+        if ($type == $this->type || settype($value, $this->type)) {
             $this->value = $value;
 
-            if ($originalValue)
-            {
+            if ($originalValue) {
                 $this->originalValue = $value;
             }
-        }
-        else
-        {
+        } else {
             throw new IncorrectDataTypeException($this->getName(), $this->type, $type);
         }
     }

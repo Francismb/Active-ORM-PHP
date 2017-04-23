@@ -34,8 +34,7 @@ class BelongsTo extends Relationship
      */
     public function getValue()
     {
-        if (isset($this->value))
-        {
+        if (isset($this->value)) {
             return $this->value;
         }
 
@@ -61,8 +60,7 @@ class BelongsTo extends Relationship
      */
     public function save()
     {
-        if (isset($this->value))
-        {
+        if (isset($this->value)) {
             $this->value->save();
 
             $this->owner->definition->getTable()->getColumn($this->column)->setValue(

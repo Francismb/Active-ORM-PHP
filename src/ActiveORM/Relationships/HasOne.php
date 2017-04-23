@@ -35,8 +35,7 @@ class HasOne extends Relationship
      */
     public function getValue()
     {
-        if (isset($this->value))
-        {
+        if (isset($this->value)) {
             return $this->value;
         }
 
@@ -62,8 +61,7 @@ class HasOne extends Relationship
      */
     public function save()
     {
-        if (isset($this->value))
-        {
+        if (isset($this->value)) {
             $this->value->definition->getTable()->getColumn($this->column)->setValue(
                 $this->owner->definition->getTable()->getIdentifier()->getValue()
             );

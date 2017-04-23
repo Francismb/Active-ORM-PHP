@@ -61,10 +61,8 @@ class ActiveRecordDB
     private function __construct($arguments)
     {
         $this->arguments = $arguments;
-        foreach ($arguments as $key => $value)
-        {
-            switch ($key)
-            {
+        foreach ($arguments as $key => $value) {
+            switch ($key) {
                 case "database_type":
                     $this->type = $value;
                     break;
@@ -95,8 +93,7 @@ class ActiveRecordDB
      */
     public static function initialize($arguments)
     {
-        if (static::$instance != null)
-        {
+        if (static::$instance != null) {
             return static::$instance;
         }
         static::$instance = new self($arguments);
@@ -114,7 +111,8 @@ class ActiveRecordDB
     /**
      * @return \Medoo\Medoo
      */
-    public static function getDatabase() {
+    public static function getDatabase()
+    {
         return self::getInstance()->database;
     }
 

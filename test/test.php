@@ -151,3 +151,19 @@ if (!$secondJob->id)
 }
 
 echo "\n\nAll tests passed";
+
+/**
+ * Test transaction
+ */
+clearDatabase();
+\ActiveORM\ActiveRecordDB::getDatabase()->action(function ($database) {
+    $database->insert("users", [
+        "email" => "foo",
+        "password_digest" => "testtttt"
+    ]);
+    $user_id = $database->id();
+    $database->insert("houses", [
+        "user_id" => $user_id,
+        "address" => "testtttt"
+    ]);
+});

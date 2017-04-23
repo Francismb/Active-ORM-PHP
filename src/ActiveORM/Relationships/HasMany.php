@@ -34,8 +34,7 @@ class HasMany extends Relationship
      */
     public function getValue()
     {
-        if (isset($this->values))
-        {
+        if (isset($this->values)) {
             return $this->values;
         }
 
@@ -61,19 +60,12 @@ class HasMany extends Relationship
      */
     public function save()
     {
-        if (isset($this->values))
-        {
-            foreach($this->values as $value)
-            {
-                try {
-                    $value->definition->getTable()->getColumn($this->column)->setValue(
-                        $this->owner->definition->getTable()->getIdentifier()->getValue()
-                    );
-                    $value->save();
-                } catch (\Exception $e)
-                {
-                    echo $e;
-                }
+        if (isset($this->values)) {
+            foreach($this->values as $value) {
+                $value->definition->getTable()->getColumn($this->column)->setValue(
+                    $this->owner->definition->getTable()->getIdentifier()->getValue()
+                );
+                $value->save();
             }
         }
     }
