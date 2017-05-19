@@ -27,6 +27,30 @@ class Queryable
      */
     public function save()
     {
+        if ($this->definition->getTable()->updated() && $this->valid()) {
+            $row = $this->compileTable($this->definition->getTable());
+            if ($this->definition->getTable()->getIdentifier()->getValue() != null) {
+                ActiveRecordDB::getDatabase()->update(
+                    $this->definition->getTable()->getName(),
+                    $row,
+                    self::createIdentifier($this->definition->getTable()->getIdentifier())
+                );
+                $this->definition->getTable()->refresh();
+                ActiveRecordDB::getInstance()->debug();
+            } else {
+                ActiveRecordDB::getDatabase()->insert($this->definition->getTable()->getName(), $row);
+                $this->definition->getTable()->getIdentifier()->setValue(ActiveRecordDB::getDatabase()->id());
+                $this->definition->getTable()->refresh();
+                ActiveRecordDB::getInstance()->debug();
+            }
+        }
+    }
+
+    /**
+     * Generate the graph
+     */
+    public function saveAll()
+    {
         $createdObjects = $this->getCreatedObjects($this, [spl_object_hash($this) => $this]);
     }
 
@@ -46,7 +70,7 @@ class Queryable
                 } else {
                     $record = $value;
                     $objectHash = spl_object_hash($record);
-                    if (!isset($updatedObjects[$objectHash])) {
+                    if (!isset($objects[$objectHash])) {
                         $objects[$objectHash] = $record;
                         $objects = array_merge($objects, $this->getCreatedObjects($record, $objects));
                     }
