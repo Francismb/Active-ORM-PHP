@@ -57,6 +57,15 @@ class HasOne extends Relationship
     }
 
     /**
+     * Checks to see if a value has been loaded
+     * @return boolean
+     */
+    public function hasValue()
+    {
+        return isset($this->value);
+    }
+
+    /**
      * Saves the relationship
      */
     public function save()

@@ -59,6 +59,12 @@ abstract class Relationship
     public abstract function setValue($value);
 
     /**
+     * Checks to see if a value has been loaded
+     * @return boolean
+     */
+    public abstract function hasValue();
+
+    /**
      * Saves the relationship
      */
     public abstract function save();

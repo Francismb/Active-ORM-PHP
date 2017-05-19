@@ -22,76 +22,38 @@ class Queryable
         $this->definition = $definition;
     }
 
-    public function findUpdatedObjects($rootObject, $updatedObjects) {
-        foreach ($rootObject->definition->getRelationships() as $relationship) {
-            if ($relationship->hasBeenLoaded()) {
-                $value = $relationship->getValue();
-
-                if (is_array($value)) {
-                    foreach ($value as $object) {
-                        if ($updatedobjects does not contains $object->ID) {
-                            if ($object->definition->updated()) {
-                                $updatedObjects[$object->getId()] = $object;
-                            }
-                            $updatedObjects = array_merge($updatedObjects, $this->findUpdatedObjects($object, $updatedObjects));
-                        }
-                    }
-                } else {
-                    if ($updatedobjects does not contains $value->ID) {
-                        if ($value->definition->updated()) {
-                            $updatedObjects[$value->getId()] = $value;
-                        }
-                        $updatedObjects = array_merge($updatedObjects, $this->findUpdatedObjects($value, $updatedObjects));
-                    }
-                }
-            }
-        }
-        return $updatedObjects;
-    }
-
     /**
      * Either updates or inserts the model depending on if the ID is present.
      */
     public function save()
     {
-        $updatedObjects = $this->findUpdatedObjects($this, []);
-        foreach ($updatedObjects as $object) {
-            $object->save();//Only save that one object
-        }
+        $createdObjects = $this->getCreatedObjects($this, [spl_object_hash($this) => $this]);
+    }
 
-        if ($this->definition->getTable()->updated() && $this->valid()) {
-
-            if (!ActiveRecordDB::getDatabase()->pdo->inTransaction()) {
-                $createdTransaction = ActiveRecordDB::getDatabase()->pdo->beginTransaction();
-            }
-
-            $row = $this->compileTable($this->definition->getTable());
-
-            if ($this->definition->getTable()->getIdentifier()->getValue() != null) {
-
-                ActiveRecordDB::getDatabase()->update(
-                    $this->definition->getTable()->getName(),
-                    $row,
-                    self::createIdentifier($this->definition->getTable()->getIdentifier())
-                );
-
-                $this->definition->getTable()->refresh();
-                ActiveRecordDB::getInstance()->debug();
-            } else {
-                ActiveRecordDB::getDatabase()->insert($this->definition->getTable()->getName(), $row);
-                $this->definition->getTable()->getIdentifier()->setValue(ActiveRecordDB::getDatabase()->id());
-                $this->definition->getTable()->refresh();
-                ActiveRecordDB::getInstance()->debug();
-            }
-
-            foreach ($this->definition->getRelationships() as $relationship) {
-                $relationship->save();
-            }
-
-            if (isset($createdTransaction)) {
-                ActiveRecordDB::getDatabase()->pdo->commit();
+    private function getCreatedObjects($root, $objects) {
+        foreach ($root->definition->getRelationships() as $relationship) {
+            if ($relationship->hasValue()) {
+                $value = $relationship->getValue();
+                if (is_array($value)) {
+                    $records = $value;
+                    foreach ($records as $record) {
+                        $objectHash = spl_object_hash($record);
+                        if (!isset($objects[$objectHash])) {
+                            $objects[$objectHash] = $record;
+                            $objects = array_merge($objects, $this->getCreatedObjects($record, $objects));
+                        }
+                    }
+                } else {
+                    $record = $value;
+                    $objectHash = spl_object_hash($record);
+                    if (!isset($updatedObjects[$objectHash])) {
+                        $objects[$objectHash] = $record;
+                        $objects = array_merge($objects, $this->getCreatedObjects($record, $objects));
+                    }
+                }
             }
         }
+        return $objects;
     }
 
     /**
