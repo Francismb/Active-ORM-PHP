@@ -22,11 +22,43 @@ class Queryable
         $this->definition = $definition;
     }
 
+    public function findUpdatedObjects($rootObject, $updatedObjects) {
+        foreach ($rootObject->definition->getRelationships() as $relationship) {
+            if ($relationship->hasBeenLoaded()) {
+                $value = $relationship->getValue();
+
+                if (is_array($value)) {
+                    foreach ($value as $object) {
+                        if ($updatedobjects does not contains $object->ID) {
+                            if ($object->definition->updated()) {
+                                $updatedObjects[$object->getId()] = $object;
+                            }
+                            $updatedObjects = array_merge($updatedObjects, $this->findUpdatedObjects($object, $updatedObjects));
+                        }
+                    }
+                } else {
+                    if ($updatedobjects does not contains $value->ID) {
+                        if ($value->definition->updated()) {
+                            $updatedObjects[$value->getId()] = $value;
+                        }
+                        $updatedObjects = array_merge($updatedObjects, $this->findUpdatedObjects($value, $updatedObjects));
+                    }
+                }
+            }
+        }
+        return $updatedObjects;
+    }
+
     /**
      * Either updates or inserts the model depending on if the ID is present.
      */
     public function save()
     {
+        $updatedObjects = $this->findUpdatedObjects($this, []);
+        foreach ($updatedObjects as $object) {
+            $object->save();//Only save that one object
+        }
+
         if ($this->definition->getTable()->updated() && $this->valid()) {
 
             if (!ActiveRecordDB::getDatabase()->pdo->inTransaction()) {
